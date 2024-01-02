@@ -2,16 +2,17 @@ import 'dart:convert';
 
 import 'package:mysql1/mysql1.dart';
 import 'package:shelf/shelf.dart';
-// import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';
 import 'role_user.dart';
+import 'users.dart';
 
 class Controller {
-  // String getDateNow() {
-  //   final DateTime now = DateTime.now();
-  //   final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm:ss');
-  //   final String dateNow = formatter.format(now);
-  //   return dateNow;
-  // }
+  String getDateNow() {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm:ss');
+    final String dateNow = formatter.format(now);
+    return dateNow;
+  }
 
 /* Connection MYSQLI */
   Future<MySqlConnection> ConnectSql() async {
@@ -92,6 +93,22 @@ class Controller {
     var result = await conn.query(sql, []);
 
     return Response.ok(result.toString());
+  }
+
+  //Post/Tambah Users
+  Future<Response> postUsers(Request request) async {
+    String body = await request.readAsString();
+    Users roles = Users.fromJson(body);
+
+    var conn = await ConnectSql();
+    var sql = "INSERT INTO user (nama_role) VALUES ('${roles.nama_role}')";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(jsonEncode({
+      'message': 'User berhasil ditambah',
+      'nama_user': Users.nama_user,
+    }));
   }
 
   /*END USER*/
