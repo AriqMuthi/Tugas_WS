@@ -98,16 +98,16 @@ class Controller {
   //Post/Tambah Users
   Future<Response> postUsers(Request request) async {
     String body = await request.readAsString();
-    Users roles = Users.fromJson(body);
+    Users users = userFromJson(body);
 
     var conn = await ConnectSql();
-    var sql = "INSERT INTO user (nama_role) VALUES ('${roles.nama_role}')";
+    var sql = "INSERT INTO user (nama_user, jk_user, id_role ) VALUES ('${users.nama_user}', '${users.jk_user}', '${users.id_role}')";
     var result = await conn.query(sql, []);
 
     // Kembalikan informasi yang lebih relevan
     return Response.ok(jsonEncode({
       'message': 'User berhasil ditambah',
-      'nama_user': Users.nama_user,
+      'nama_user': users.nama_user,
     }));
   }
 
