@@ -99,15 +99,47 @@ class Controller {
   Future<Response> postUsers(Request request) async {
     String body = await request.readAsString();
     Users users = userFromJson(body);
+    users.tanggal = getDateNow();
 
     var conn = await ConnectSql();
-    var sql = "INSERT INTO user (nama_user, jk_user, id_role ) VALUES ('${users.nama_user}', '${users.jk_user}', '${users.id_role}')";
+    var sql = "INSERT INTO user (nama_user, jk_user, is_active_user, join_date_user, id_role ) VALUES ('${users.nama_user}', '${users.jk_user}', '${users.aktif}', '${users.tanggal}', '${users.id_role}')";
     var result = await conn.query(sql, []);
 
     // Kembalikan informasi yang lebih relevan
     return Response.ok(jsonEncode({
       'message': 'User berhasil ditambah',
       'nama_user': users.nama_user,
+    }));
+  }
+
+  //Put/Edit User
+  Future<Response> putUsers(Request request) async{
+    String body = await request.readAsString();
+    Users users = userFromJson(body);
+
+    var conn = await ConnectSql();
+    var sql = "UPDATE user SET nama_user='${users.nama_user}', jk_user='${users.jk_user}', id_role='${users.id_role}' WHERE id_user='${users.id_user}'";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(jsonEncode({
+      'message': 'Role berhasil diubah',
+      'nama_role': users.nama_user,
+    }));
+  }
+
+//Delete Role User
+  Future<Response> deleteUsers(Request request) async{
+    String body = await request.readAsString();
+    Users users = userFromJson(body);
+
+    var conn = await ConnectSql();
+    var sql = "DELETE FROM user WHERE id_user='${users.id_user}'";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(jsonEncode({
+      'message': 'Delete berhasil dihapus'
     }));
   }
 
