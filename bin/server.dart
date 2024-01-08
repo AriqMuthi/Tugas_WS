@@ -26,7 +26,11 @@ void main(List<String> args) async {
     ..get('/getallusers', ctrl.getAllUsers)
     ..post('/postusers', ctrl.postUsers)
     ..put('/putUsers', ctrl.putUsers)
-    ..delete('/deleteuser', ctrl.deleteUsers);
+    ..delete('/deleteuser', ctrl.deleteUsers)
+    ..get('/getalljenisbarang', ctrl.getAllJenis_Barang)
+    ..post('/postJenisBarang', ctrl.postJenis_Barang)
+    ..put('/putJenisBarang', ctrl.putJenis_Barang)
+    ..delete('/deleteJenisBarang', ctrl.deleteJenis_Barang);
 
   // Configure a pipeline that logs requests.
   final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);

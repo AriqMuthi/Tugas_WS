@@ -5,6 +5,7 @@ import 'package:shelf/shelf.dart';
 import 'package:intl/intl.dart';
 import 'role_user.dart';
 import 'users.dart';
+import 'jenisbarang.dart';
 
 class Controller {
   String getDateNow() {
@@ -144,4 +145,65 @@ class Controller {
   }
 
   /*END USER*/
+
+  /* JENIS BARANG */
+  //Get All JENIS BARANG
+  Future<Response> getAllJenis_Barang(Request request) async {
+    var conn = await ConnectSql();
+    var sql = "SELECT * FROM jenis_barang";
+    var jenis = await conn.query(sql, []);
+
+    return Response.ok(jenis.toString());
+  }
+
+  //Post/Tambah JENIS BARANG
+  Future<Response> postJenis_Barang(Request request) async {
+    String body = await request.readAsString();
+    Jenis_Barang jenis = jenisFromJson(body);
+
+    var conn = await ConnectSql();
+    var sql =
+        "INSERT INTO jenis_barang (nama_jenis_barang) VALUES ('${jenis.nama_jenis_barang}')";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(jsonEncode({
+      'message': 'Jenis Barang berhasil ditambah',
+      'nama_role': jenis.nama_jenis_barang,
+    }));
+  }
+
+  //Put/Edit JENIS BARANG
+  Future<Response> putJenis_Barang(Request request) async {
+    String body = await request.readAsString();
+    Jenis_Barang jenis = jenisFromJson(body);
+
+    var conn = await ConnectSql();
+    var sql =
+        "UPDATE jenis_barang SET nama_jenis_barang='${jenis.nama_jenis_barang}' WHERE id_jenis_barang='${jenis.id_jenis_barang}'";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(jsonEncode({
+      'message': 'Jenis Barang berhasil diubah',
+      'nama_role': jenis.nama_jenis_barang,
+    }));
+  }
+
+  //Delete Jenis Barang
+  Future<Response> deleteJenis_Barang(Request request) async {
+    String body = await request.readAsString();
+    Jenis_Barang jenis = jenisFromJson(body);
+
+    var conn = await ConnectSql();
+    var sql =
+        "DELETE FROM jenis_barang WHERE id_jenis_barang='${jenis.id_jenis_barang}'";
+    var result = await conn.query(sql, []);
+
+    // Kembalikan informasi yang lebih relevan
+    return Response.ok(
+        jsonEncode({'message': 'Jenis Barang berhasil dihapus'}));
+  }
+
+/* END JENIS BARANG*/
 }
